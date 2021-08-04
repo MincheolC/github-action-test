@@ -58,6 +58,3 @@ jobs:
           function_name: action-test
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
           zip_file: ./lambda.zip
-          dry_run: true
-
-
