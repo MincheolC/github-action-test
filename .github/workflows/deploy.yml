@@ -17,6 +17,9 @@ jobs:
   build-deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lambdas
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -57,4 +60,4 @@ jobs:
           aws_region: ap-northeast-2
           function_name: action-test
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          zip_file: ./lambda.zip
+          zip_file: lambda.zip
