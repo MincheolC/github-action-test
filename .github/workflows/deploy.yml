@@ -54,11 +54,6 @@ jobs:
           aws_region: ap-northeast-2
           function_name: action-test
           role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          memory_size: 512
-          timeout: 10
-          handler: core
           zip_file: lambda.zip
-          runtime: java11
-          environment: AWS_S3_BUCKET_NAME=farmmorning-market-price-v2,FARM_PRODUCT_MARKET_PRICE_API_KEY=${{ secrets.FARM_PRODUCT_MARKET_PRICE_API_KEY}}
 
 
