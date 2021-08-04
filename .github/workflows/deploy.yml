@@ -59,6 +59,6 @@ jobs:
           handler: core
           zip_file: lambda.zip
           runtime: java11
-          envionment: AWS_S3_BUCKET_NAME=farmmorning-market-price-v2,FARM_PRODUCT_MARKET_PRICE_API_KEY=${{ secrets.FARM_PRODUCT_MARKET_PRICE_API_KEY}}
+          environment: AWS_S3_BUCKET_NAME=farmmorning-market-price-v2,FARM_PRODUCT_MARKET_PRICE_API_KEY=${{ secrets.FARM_PRODUCT_MARKET_PRICE_API_KEY}}
 
 
