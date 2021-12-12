@@ -39,7 +39,8 @@ jobs:
         run: |
           mysql --version
           sudo service mysql start
-          mysql -uroot -proot -e "SHOW DATABASES"
+          mysql -uroot -proot -e "CREATE DATABASES cljdev"
+          mysql -udev -p1234 -e "SHOW DATABASES"
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
