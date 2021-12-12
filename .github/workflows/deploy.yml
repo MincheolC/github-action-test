@@ -56,13 +56,23 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Cache maven
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-maven
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/deps.edn') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
+
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@3.6
         with:
           cli: 1.10.1.693
 
       - name: Run server
-        run: clojure -A:dev -X user/go
+        run: clojure -A:dev -X user/go &
 
       - name: Run end to end tests
         run: newman run newman.json
