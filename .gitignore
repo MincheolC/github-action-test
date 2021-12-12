@@ -10,9 +10,9 @@ pom.xml.asc
 .lein-repl-history
 .lein-plugins/
 .lein-failures
-lambdas/.nrepl-port
-lambdas/.cpcache/
+.nrepl-port
+.cpcache/
 .idea/
-lambdas/.lsp/
+.lsp/
 *.iml
 *.zip
