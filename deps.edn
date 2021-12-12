@@ -2,7 +2,7 @@
 
  :deps {com.github.seancorfield/honeysql     {:mvn/version "2.0.0-rc3"}
         hikari-cp/hikari-cp                  {:mvn/version "2.13.0"}
-        integrant                            {:mvn/version "0.8.0"}
+        integrant/integrant                  {:mvn/version "0.8.0"}
         metosin/reitit                       {:mvn/version "0.5.15"}
         metosin/reitit-ring                  {:mvn/version "0.5.15"}
         mysql/mysql-connector-java           {:mvn/version "8.0.22"}
@@ -11,5 +11,5 @@
         ring/ring                            {:mvn/version "1.9.3"}
         seancorfield/next.jdbc               {:mvn/version "1.2.659"}}
 
- :aliases {:dev        {:extra-paths ["dev/src"]
-                        :extra-deps  {integrant/repl {:mvn/version "0.3.2"}}}}}
+ :aliases {:dev {:extra-paths ["dev/src"]
+                 :extra-deps  {integrant/repl {:mvn/version "0.3.2"}}}}}

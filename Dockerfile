@@ -23,7 +23,7 @@ ENV PORT 8080
 EXPOSE 8080
 
 # set the command, with proper container support
-CMD ["bash", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=85 -javaagent:/usr/src/app/datadog/dd-java-agent.jar -Ddd.service=sinsun-market -Ddd.logs.injection=true -Ddd.agent.host=${DD_AGENT_HOST} -jar /usr/src/app/app.jar"]
+CMD ["bash", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=85 -Ddd.service=core -Ddd.logs.injection=true -Ddd.agent.host=${DD_AGENT_HOST} -jar /usr/src/app/app.jar"]
 
 # copy the ever changing artifact
 COPY --from=builder /usr/src/app/target/app-1.0.0-SNAPSHOT-standalone.jar /usr/src/app/app.jar

@@ -57,14 +57,8 @@ jobs:
         with:
           cli: 1.10.1.693
 
-      - name: Build docker
-        uses: whoan/docker-build-with-cache-action@v5
-        with:
-          image_name: github-action-test
-          image_tag: ${{ github.sha }}
-
-      - name: Run docker
-        uses: github-action-test:${{ github.sha }}
+      - name: Run server
+        run: clj -A:dev -X user/go
 
       - name: Run end to end tests
-        run: newman run "newman.json"
+        run: newman run newman.json
