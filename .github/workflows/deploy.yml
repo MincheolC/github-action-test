@@ -51,23 +51,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-          cache: 'maven'
 
-#      - name: Install clojure tools
-#        uses: DeLaGuardo/setup-clojure@3.6
-#        with:
-#          distribution: 'temurin'
-#          cli: 1.10.1.693
-#          cache: 'maven'
-#
-#      - name: Build docker
-#        uses: whoan/docker-build-with-cache-action@v5
-#        with:
-#          image_name: github-action-test
-#          image_tag: ${{ github.sha }}
-#
-#      - name: Run docker
-#        uses: github-action-test:${{ github.sha }}
-#
-#      - name: Run end to end tests
-#        run: newman run "newman.json"
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@3.6
+        with:
+          cli: 1.10.1.693
+
+      - name: Build docker
+        uses: whoan/docker-build-with-cache-action@v5
+        with:
+          image_name: github-action-test
+          image_tag: ${{ github.sha }}
+
+      - name: Run docker
+        uses: github-action-test:${{ github.sha }}
+
+      - name: Run end to end tests
+        run: newman run "newman.json"
