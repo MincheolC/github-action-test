@@ -75,4 +75,6 @@ jobs:
         run: clojure -A:dev -X user/go &
 
       - name: Run end to end tests
-        run: newman run newman.json
+        run: |
+          sleep 20
+          newman run newman.json
