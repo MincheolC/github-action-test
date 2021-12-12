@@ -58,7 +58,7 @@ jobs:
           cli: 1.10.1.693
 
       - name: Run server
-        run: clj -A:dev -X user/go
+        run: clojure -A:dev -X user/go
 
       - name: Run end to end tests
         run: newman run newman.json
