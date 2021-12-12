@@ -16,12 +16,27 @@ jobs:
   build-deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.23
+        env: # 사용할 서비스의 환경설정
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: sinsun_market
+        ports: # 열어줄 포트, 8080:3306 형태로도 가능
+          - 3306
+        options: >-  # 서비스에 걸어줄 옵션
+          --health-cmd="mysqladmin ping"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout source code
         uses: actions/checkout@v2
+
+      - name: Verify Mysql connection
+        run: mysql --version
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -31,9 +46,6 @@ jobs:
 
       - name: Install newman
         run: npm install -g newman
-
-#      - name: Start mysql
-#        uses: mysql:8.0.23
 
       - name: Setup Java
         uses: actions/setup-java@v2
