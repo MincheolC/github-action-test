@@ -42,7 +42,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
-          cache: 'npm'
 
       - name: Install newman
         run: npm install -g newman
@@ -50,7 +49,9 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
+          distribution: 'temurin'
           java-version: '11'
+          cache: 'maven'
 
 #      - name: Install clojure tools
 #        uses: DeLaGuardo/setup-clojure@3.6
