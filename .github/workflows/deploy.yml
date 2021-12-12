@@ -4,9 +4,11 @@ name: deploy
 
 # Controls when the workflow will run
 on:
+  push:
+    branches:
+      - github-action
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -14,22 +16,46 @@ jobs:
   build-deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.23
+        env: # 사용할 서비스의 환경설정
+          MYSQL_ROOT_PASSWORD: root
+        ports: # 열어줄 포트, 8080:3306 형태로도 가능
+          - 3306
+        options: >-  # 서비스에 걸어줄 옵션
+          --health-cmd="mysqladmin ping"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      
-      - uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
+      - name: Checkout source code
+        uses: actions/checkout@v2
 
-      - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@3.4
+      - name: Verify Mysql connection
+        run: |
+          mysql --version
+          sudo service mysql start
+          mysql -uroot -proot -e "CREATE DATABASE cljdev"
+          mysql -uroot -proot -e "CREATE USER 'dev'@'%' IDENTIFIED WITH 'mysql_native_password' BY '1234'"
+          mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON cljdev.* TO 'dev'@'%' WITH GRANT OPTION"
+          mysql -uroot -proot -e "FLUSH PRIVILEGES"
+          mysql -udev -p1234 -e "SHOW DATABASES"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          # Install just one or all simultaneously
-          cli: 1.10.1.693
-          
+          node-version: '16'
+
+      - name: Install newman
+        run: npm install -g newman
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
       - name: Cache maven
         uses: actions/cache@v2
         env:
@@ -39,22 +65,16 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/deps.edn') }}
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
-            
-      - name: Build
-        run: |
-          mkdir classes
-          clojure -M:aot
-          clojure -M:pack mach.pack.alpha.aws-lambda -C:aot lambda.zip
-      
-      - name: Deploy
-        uses: appleboy/lambda-action@v0.1.3
+
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@3.6
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ap-northeast-2
-          function_name: action-test
-          role: ${{ secrets.AWS_LAMBDA_ROLE }}
-          zip_file: ./lambda.zip
-          dry_run: true
+          cli: 1.10.1.693
 
+      - name: Run server
+        run: clojure -A:dev -X user/go &
 
+      - name: Run end to end tests
+        run: |
+          sleep 20
+          newman run newman.json
