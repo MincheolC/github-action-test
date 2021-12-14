@@ -32,6 +32,9 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
+      - name: Verify Docker
+        run: docker --version
+
       - name: Verify Mysql connection
         run: |
           mysql --version
